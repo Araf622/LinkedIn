@@ -1,4 +1,6 @@
 const router = require('express').Router()
+const getUserProfile = require('../controller/getUserProfile')
+const checkLogin = require('../middlewares/checkLogin')
 
 let User = require('../models/user.model')
 
@@ -23,5 +25,8 @@ router.route('/add').post(async(req,res)=>{
     .then(()=> res.json("user added"))
     .catch((err)=> res.status(400).json("cannot insert into db : "+ err ))
 })
+
+router.get('/getUserProfile',checkLogin, getUserProfile)
+
 
 module.exports = router

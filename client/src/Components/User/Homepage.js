@@ -1,5 +1,6 @@
 import Header from "../Header/Header"
 import Posts from "../Posts/posts"
+import UserProfile from './UserProfile'
 import startPost from "../Posts/startPost";
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
@@ -49,47 +50,23 @@ const Homepage = () =>{
     return(
         <>
             <Header/>
-                <Container className="align-items-center" style={{width:"80%", backgroundColor:'#e6e6e6'}}>
+                <Container className="align-items-center" style={{ height:'auto',minHeight: '100vh', width:"80%", backgroundColor:'#e6e6e6'}}>
                     <Row>
-                        <Col className="bg-dark" md={3}>
-
+                        <Col className="" md={3}>
+                          
+                            <UserProfile/>
                         </Col>
 
-                        <Col style={{marginLeft:"10px", marginRight:"10px"}}  md={6}>
-                            {/* <TextField 
-                                name="content"
-                                label="Content" 
-                                multiline   // Enable multiline input
-                                rows={4}    // Number of visible rows
-                                variant="outlined" 
-                                onChange={(e)=>(onValueChange(e))}
-                            />
-                            <button onClick={()=>(createPost())}>Create post</button> */}
-                            {/* <Form onSubmit={handleSubmit}>
-                                <Form.Group controlId="postContent">
-                                    <Form.Control
-                                        as="textarea"
-                                        rows={3}
-                                        placeholder="Start a post..."
-                                        value={content}
-                                        onChange={handleContentChange}
-                                    />
-                                </Form.Group>
-
-                                <div className="d-flex justify-content-between">
-                                <div>
-                                  
-                                </div>
-
-                                <Button type="submit">Post</Button>
-                                </div>
-                            </Form> */}
+                        <Col style={{marginLeft:"10px", marginRight:"10px", height:'100%'}}  md={6}>
+          
                             <StartPost/>
-                            
+                            <hr/>
                             <Posts/>
+
+                            
                         </Col>
 
-                        <Col className="bg-dark">
+                        <Col className="">
 
                         </Col>
                 </Row>

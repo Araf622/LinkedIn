@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,6 +7,8 @@ import { faBell } from '@fortawesome/free-solid-svg-icons';
 import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import Notifications from '../Notification/notifications';
+import './Header.css'
 
 const Header = () => {
   // return (
@@ -31,12 +34,40 @@ const Header = () => {
   //     </Container>
   //   </Navbar>
   // )
+
   const navigate = useNavigate()
+  const [showNotifcation, setShowNotifcation] = useState(false)
+  const [numberOfNotifications, setNumberOfNotifications] = useState(0)
+
+  useEffect(() => {
+    // Fetch notifications from the server
+    const accessToken = sessionStorage.getItem('accessToken')
+
+    axios.get('http://localhost:5000/notifications/getNotifications', {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+      .then((response) => {
+        const notifications = response.data
+        setNumberOfNotifications(notifications.length)
+      })
+      .catch((error) => {
+        console.log('Error fetching notifications:', error);
+      });
+  }, []);
 
   const logout = ()=>{
     sessionStorage.removeItem('accessToken');
     navigate('/Login');
   }
+  
+  const handleShowNotifications = () => {
+    // setShowNotifcation(true)
+    setShowNotifcation((prevShowNotification) => !prevShowNotification);
+
+    // fetchNotifications();
+  };
 
   const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
     <button
@@ -50,38 +81,25 @@ const Header = () => {
       {children}
     </button>
   ));
+  const handleLinkedIn = () =>{
+      navigate('/Homepage')
+  }
   
   
 
   return (
 
     // <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light"
+      style={{boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',}}
+    >
       {/* <!-- Container wrapper --> */}
       <div class="container-fluid">
-        {/* <!-- Toggle button --> */}
-        <button
-          class="navbar-toggler"
-          type="button"
-          data-mdb-toggle="collapse"
-          data-mdb-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <i class="fas fa-bars"></i>
-        </button>
+       
 
         {/* <!-- Collapsible wrapper --> */}
-        <div class="collapse navbar-collapse" id="navbarSupportedContent" style={{marginLeft:"100px"}}>
-
-          {/* <!-- Navbar brand --> */}
-          {/* <!-- Left links --> */}
-
-          <i class="fa-brands fa-linkedin fa-2xl" style={{marginLeft:'40px', color:'#1751b5'}}></i>
-
-          {/* <!-- Left links --> */}
-
+        <div class="collapse navbar-collapse linkedin-icon" style={{marginLeft:"100px"}} >
+            <i class="fa-brands fa-linkedin fa-2xl" onClick={()=>handleLinkedIn()} style={{marginLeft:'40px', color:'#1751b5',cursor: 'pointer',}}></i>
         </div>
         {/* <!-- Collapsible wrapper --> */}
 
@@ -89,10 +107,13 @@ const Header = () => {
         <div class="d-flex align-items-center">
 
           {/* <!-- Notifications --> */}
-          <button className="btn btn-link text-reset me-3">
+          <button className="btn btn-link text-reset me-3" onClick={handleShowNotifications}>
             <i className="fas fa-bell fa-2xl"></i>
-            <span className="badge rounded-pill badge-notification bg-danger" style={{ position: 'relative', top: '-15px', right: '12px' }}></span>
+            <span className="badge rounded-pill badge-notification bg-danger" style={{ position: 'relative', top: '-15px', right: '12px' }}>
+            </span>
           </button>
+          {showNotifcation && <Notifications/>} 
+
 
           {/* <!-- Profile --> */}
           {/* <button onClick={logout} className="btn btn-link text-reset me-3">

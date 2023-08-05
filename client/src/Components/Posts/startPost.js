@@ -8,7 +8,13 @@ import axios from 'axios';
 const StartPost = () => {
     const [showModal, setShowModal] = useState(false);
     const [postContent, setPostContent] = useState('');
+    const [filedetails, setFiledetails] = useState();
+
     const [postType, setPostType] = useState('');
+
+    const handleImageChange = (e) => {
+      setFiledetails(e.target.files[0]);
+  }
   
     const handlePostClick = () => {
       setShowModal(true);
@@ -24,15 +30,31 @@ const StartPost = () => {
   
     const handlePostSubmit = () => {
       // Here, you can implement the logic to handle the post submission
-      console.log('Post content:', postContent);
+      // console.log('Post content:', postContent);
       const accessToken = sessionStorage.getItem('accessToken')
-      console.log("accessToken : ", accessToken)
+      // console.log("accessToken : ", accessToken)
+      console.log('Post content:', postContent)
+      console.log('file details:', filedetails)
 
-      axios.post('http://localhost:5000/posts/createPost',{
-          content : postContent
-      }, {
+      // const formData = {
+      //   content : postContent,
+      //   image : filedetails
+      // }
+
+
+      const formData = new FormData(); // Create a new FormData object
+
+
+      formData.append('content', postContent); // Append the content field
+      formData.append('image', filedetails); 
+
+      // console.log("form-data : ", formData.get('filedetails'));
+
+         
+      axios.post('http://localhost:5000/posts/createPost',formData, {
           headers :{
-              Authorization: `Bearer ${accessToken}`
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": 'multipart/form-data'
           },
           
       })
@@ -48,7 +70,9 @@ const StartPost = () => {
     
     return(
         <>
-        <div className="start-post-area bg-light border-rounded" onClick={handlePostClick} style={{height : '10%',marginTop:'20px', marginBottom:'20px'}}>
+        <div className="start-post-area bg-light border-rounded" onClick={handlePostClick} 
+          style={{height : '10%',marginTop:'30px', marginBottom:'20px', borderRadius:'10px',
+          boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',}}>
             <Form className='d-flex justify-content-center'>
                 <Form.Group controlId="postContent">
                     <Form.Control
@@ -107,6 +131,17 @@ const StartPost = () => {
                   placeholder="Write your post here..."
                 />
               </Form.Group>
+
+              <Form.Group controlId="postImage">
+                <Form.Label>Upload an Image</Form.Label>
+                <Form.Control
+                  type="file"
+                  name = "image"
+                  onChange={handleImageChange}
+                  accept="image/*"
+                />
+              </Form.Group>
+
             </Form>
           </Modal.Body>
           <Modal.Footer>

@@ -11,8 +11,9 @@ const dotenv = require('dotenv')
 const bodyParser = require('body-parser');
 const app = express();
 const Router = require('./routes/route.js')
-const usersRouter = require('./routes/users.js')
-const postsRouter = require('./routes/posts.js')
+const usersRouter = require('./routes/usersRoutes.js')
+const postsRouter = require('./routes/postsRoutes.js')
+const notificationsRouter = require('./routes/notificationsRoute.js')
 
 
 const port = process.env.PORT;
@@ -35,6 +36,8 @@ app.use('/', Router)
 
 app.use('/users', usersRouter)
 app.use('/posts', postsRouter)
+app.use('/notifications', notificationsRouter)
+// app.use('/notifications', notificationsRouter)
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
