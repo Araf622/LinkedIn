@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState } from 'react';
 import { Button, Modal, Form,  } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell } from '@fortawesome/free-solid-svg-icons';
+import api from '../API/api';
 
-import axios from 'axios';
+// import axios from 'axios';
 
 const StartPost = () => {
     const [showModal, setShowModal] = useState(false);
     const [postContent, setPostContent] = useState('');
     const [filedetails, setFiledetails] = useState();
+    // const [postType, setPostType] = useState('');
 
-    const [postType, setPostType] = useState('');
+    const accessToken = sessionStorage.getItem('accessToken')
+
 
     const handleImageChange = (e) => {
       setFiledetails(e.target.files[0]);
@@ -21,7 +22,7 @@ const StartPost = () => {
     };
     const handleOptionClick = (type) => {
         setShowModal(true);
-        setPostType(type);
+        // setPostType(type);
       };
     const handleModalClose = () => {
       setShowModal(false);
@@ -29,34 +30,23 @@ const StartPost = () => {
     };
   
     const handlePostSubmit = () => {
-      // Here, you can implement the logic to handle the post submission
-      // console.log('Post content:', postContent);
-      const accessToken = sessionStorage.getItem('accessToken')
-      // console.log("accessToken : ", accessToken)
+  
       console.log('Post content:', postContent)
       console.log('file details:', filedetails)
-
-      // const formData = {
-      //   content : postContent,
-      //   image : filedetails
-      // }
-
-
-      const formData = new FormData(); // Create a new FormData object
-
-
-      formData.append('content', postContent); // Append the content field
+  
+      const formData = new FormData(); 
+      formData.append('content', postContent); 
       formData.append('image', filedetails); 
 
-      // console.log("form-data : ", formData.get('filedetails'));
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": 'multipart/form-data'
+      }
+
 
          
-      axios.post('http://localhost:5000/posts/createPost',formData, {
-          headers :{
-              Authorization: `Bearer ${accessToken}`,
-              "Content-Type": 'multipart/form-data'
-          },
-          
+      api.post('http://localhost:5000/posts/createPost',formData, {
+          headers :headers        
       })
       .then((response) =>{
           console.log(response)

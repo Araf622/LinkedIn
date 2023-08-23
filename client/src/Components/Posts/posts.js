@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import api from '../API/api';
 
 const Posts = () => {
   const [posts, setPosts] = useState([]);
 
   const accessToken = sessionStorage.getItem('accessToken');
+  const headers = {
+    Authorization: `Bearer ${accessToken}`
+
+  }
 
   useEffect(() => {
     
-    axios.get('http://localhost:5000/posts/getPost',{
-        headers: {
-          Authorization: `Bearer ${accessToken}`
-        }
+    api.get('http://localhost:5000/posts/getPost',{
+        headers: headers,
     })
       .then((response) => {
         setPosts(response.data);
@@ -23,16 +26,7 @@ const Posts = () => {
   }, [posts]);
 
   return (
-  //   <div style={{marginTop:'20px'}}>
-  //   {posts.map((post) => (
-  //     <div className='border rounded bg-light' key={post.id} style={{ marginBottom: '20px' }}>
-  //         {/* <h3>Post ID: {post._id}</h3> */}
-  //         <p className='bg-dark'  style={{ textAlign: 'left'}}>{post.username}</p>
-  //         <p className='bg-dark'   style={{ textAlign: 'left'}}>{post.email}</p>
-  //         <pre className='bg-dark' style={{ textAlign: 'left'}}>Content: {post.content}</pre>
-  //     </div>
-  //   ))}
-  // </div>
+ 
       <div style={{ marginTop: '20px' }}>
       {posts.map((post) => (
         <div>

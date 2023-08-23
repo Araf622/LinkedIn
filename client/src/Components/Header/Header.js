@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell } from '@fortawesome/free-solid-svg-icons';
-import { Navbar, Nav, Container, Dropdown } from 'react-bootstrap';
+import { Navbar, Nav, Container, Dropdown, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Notifications from '../Notification/notifications';
@@ -37,6 +37,7 @@ const Header = () => {
 
   const navigate = useNavigate()
   const [showNotifcation, setShowNotifcation] = useState(false)
+  const [notifications, setNotifications] = useState('')
   const [numberOfNotifications, setNumberOfNotifications] = useState(0)
 
   useEffect(() => {
@@ -49,19 +50,19 @@ const Header = () => {
       }
     })
       .then((response) => {
-        const notifications = response.data
+        setNotifications(response.data)
         setNumberOfNotifications(notifications.length)
       })
       .catch((error) => {
         console.log('Error fetching notifications:', error);
       });
-  }, []);
+  }, [notifications]);
 
-  const logout = ()=>{
+  const logout = () => {
     sessionStorage.removeItem('accessToken');
     navigate('/Login');
   }
-  
+
   const handleShowNotifications = () => {
     // setShowNotifcation(true)
     setShowNotifcation((prevShowNotification) => !prevShowNotification);
@@ -81,25 +82,25 @@ const Header = () => {
       {children}
     </button>
   ));
-  const handleLinkedIn = () =>{
-      navigate('/Homepage')
+  const handleLinkedIn = () => {
+    navigate('/Homepage')
   }
-  
-  
+
+
 
   return (
 
     // <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light"
-      style={{boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',}}
+      style={{ boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)', }}
     >
       {/* <!-- Container wrapper --> */}
       <div class="container-fluid">
-       
+
 
         {/* <!-- Collapsible wrapper --> */}
-        <div class="collapse navbar-collapse linkedin-icon" style={{marginLeft:"100px"}} >
-            <i class="fa-brands fa-linkedin fa-2xl" onClick={()=>handleLinkedIn()} style={{marginLeft:'40px', color:'#1751b5',cursor: 'pointer',}}></i>
+        <div class="collapse navbar-collapse linkedin-icon" style={{ marginLeft: "100px" }} >
+          <i class="fa-brands fa-linkedin fa-2xl" onClick={() => handleLinkedIn()} style={{ marginLeft: '40px', color: '#1751b5', cursor: 'pointer', }}></i>
         </div>
         {/* <!-- Collapsible wrapper --> */}
 
@@ -109,27 +110,24 @@ const Header = () => {
           {/* <!-- Notifications --> */}
           <button className="btn btn-link text-reset me-3" onClick={handleShowNotifications}>
             <i className="fas fa-bell fa-2xl"></i>
-            <span className="badge rounded-pill badge-notification bg-danger" style={{ position: 'relative', top: '-15px', right: '12px' }}>
+            <span className="badge rounded-pill badge-notification bg-danger" style={{ position: 'relative', top: '-15px', right: '8px' }}>
+              {numberOfNotifications}
             </span>
           </button>
-          {showNotifcation && <Notifications/>} 
+          {showNotifcation && <Notifications />}
 
 
           {/* <!-- Profile --> */}
-          {/* <button onClick={logout} className="btn btn-link text-reset me-3">
-            <i className="fas fa-bell"></i>
-            <span className="badge rounded-pill badge-notification bg-danger" style={{ position: 'relative', top: '-15px', right: '5px' }}>1</span>
-          </button> */}
-           <Dropdown>
-            <Dropdown.Toggle as={CustomToggle} id="profile-dropdown">
-            <i class="fa-solid fa-user fa-2xl" style={{color: '#1c3754'}}></i>
+          <Dropdown>
+            <Dropdown.Toggle as={Button} id="profile-dropdown">
+              <i class="fa-solid fa-user fa-2xl" style={{ color: '#1c3754' }}></i>
             </Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={logout}>Logout</Dropdown.Item>
               <Dropdown.Item>Settings</Dropdown.Item>
             </Dropdown.Menu>
-      </Dropdown>
-          
+          </Dropdown>
+
         </div>
         {/* <!-- Right elements --> */}
       </div>

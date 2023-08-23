@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import api from '../API/api';
 import UserProfile from '../User/UserProfile';
 import { Container, Row, Col, Form, Button } from "react-bootstrap";
 import Header from "../Header/Header";
@@ -17,16 +18,18 @@ const NotificationPost = () => {
 
     const notification = location.state?.notification
     const accessToken = sessionStorage.getItem('accessToken');
+    const header = {
+        Authorization: `Bearer ${accessToken}`
+
+    }
 
     console.log("NotificationPost : ", notification);
 
     useEffect(() => {
 
-        axios.get('http://localhost:5000/notifications/getNotifiedPost', {
+        api.get('http://localhost:5000/notifications/getNotifiedPost', {
             params: notification, // Send the notification as a query parameter
-            headers: {
-                Authorization: `Bearer ${accessToken}`
-            }
+            headers: header
         })
             .then((response) => {
                 setPost(response.data);

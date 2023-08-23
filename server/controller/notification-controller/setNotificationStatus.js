@@ -6,10 +6,12 @@ const setNotificationStatus = async(req, res) => {
     const receiverId = notification.receiverId
     // console.log("notification : ", notification)
     try{
-        await Notification.updateMany(
-            {$and: [{postId:postId},{receiverId:receiverId}]},
-            {seen:true},
-        )
+        // await Notification.updateMany(
+        //     {$and: [{postId:postId},{receiverId:receiverId}]},
+        //     {seen:true},
+        // )
+        await Notification.deleteMany({ $and: [{ postId: postId }, { receiverId: receiverId }] });
+
         res.status(200).json({ message: 'Notification status updated successfully' });
     }
     catch(err){
